@@ -1,3 +1,23 @@
+=== 0.0.5 / 2010-02-14 by nat.lownes@gmail.com
+* Updated most all of the Ruby API to match the most recent Google Static Maps API.  This includes:
+	- Changed the maximum_url_size to 2048
+	- Changing parameters to match their Google API equivalents. i.e.:
+		- Marker's "alpha_character" can be used simply as :label / Marker#label=
+		- Changed available colors restrictions
+		- Updated marker label restriction to capital letters A-Z, 0-9
+		- Added required sensor parameter to Map
+		- Remove requiring a Google Maps API key.  It can still be used via the original :key parameter.
+	- Updated Marker to accept:
+		- color
+		- label
+		- icon
+		- size
+		- shadow
+* Changed MissingArgument instances to ArgumentError instances
+* Added address support on both Map :center and Marker :location params/setters via a StaticGmaps::Location class.
+* Added block initializer support if you cannot wield a lengthy hash like a weapon.
+* All of these changes maintain backward compatibility with previous versions.
+
 === 0.0.4 / 2009-02-18 by daniel.mattes@gmx.de
 
 * No Map::default_center, because of auto centering through google when markers.count > 1

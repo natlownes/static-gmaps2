@@ -23,7 +23,7 @@
 require 'net/http'
 
 module StaticGmaps 
-  @@version = '0.0.4' 
+  @@version = '0.0.5' 
   
   #map  
   @@maximum_url_size = 2048
@@ -167,11 +167,11 @@ module StaticGmaps
     def initialize(options = {}, &block)
       self.location        = options[:location]        || [StaticGmaps::default_latitude, StaticGmaps::default_longitude]
       self.label           = options[:label]           || StaticGmaps::default_alpha_character
+      self.color           = options[:color]           || StaticGmaps::default_color
       # original api compatibility
       self.label           = options[:alpha_character] if options[:alpha_character]
       self.latitude        = options[:latitude]        if options[:latitude]
       self.longitude       = options[:longitude]       if options[:longitude]
-      self.color           = options[:color]           || StaticGmaps::default_color
       yield self if block_given?
     end
     

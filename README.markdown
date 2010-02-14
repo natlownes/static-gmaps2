@@ -1,11 +1,9 @@
 = StaticGmaps
 
-* http://github.com/dmattes/static-gmaps/
-
 == DESCRIPTION:
 
 Provides an interface to the Google Static Maps API.
-Original Version from John Wulff, modified by Daniel Mattes
+Original Version from John Wulff.  Contributors include Daniel Mattes, Nat Lownes.
 
 == FEATURES/PROBLEMS:
 
@@ -13,19 +11,39 @@ Original Version from John Wulff, modified by Daniel Mattes
 
 == SYNOPSIS:
 
-  # In environment.rb or initializers you can set default values, for example
-  StaticGmaps::default_size = [ 170, 200 ]
+In environment.rb or initializers you can set default values, for example:
 
-  map = StaticGmaps::Map.new :center   => [ 40.714728, -73.998672 ],
-                             :zoom     => 5,
-                             :size     => [ 500, 400 ],
-                             :map_type => :roadmap,
-                             :key      => GOOGLE_MAPS_API_KEY
-  map.markers << StaticGmaps::Marker.new(:latitude => 40,
-                                         :longitude => -73,
-                                         :color => :blue,
-                                         :alpha_character => :b)
-  map.url => 'http://maps.google.com/staticmap?center=40.714728,-73.998672&key=GOOGLE_MAPS_API_KEY&map_type=roadmap&markers=40,-73,blueb&size=500x400&zoom=5'
+	StaticGmaps::default_size = [ 170, 200 ]
+
+	map = StaticGmaps::Map.new :center   => [ 40.714728, -73.998672 ],
+	                            :zoom     => 5,
+	                            :size     => [ 500, 400 ],
+	                            :map_type => :roadmap
+
+	map.markers << StaticGmaps::Marker.new(:latitude => 40,
+	                                        :longitude => -73,
+	                                        :color => :blue,
+	                                        :label => "B")
+map.url => 'http://maps.google.com/maps/api/staticmap?center=40.714728,-73.998672&map_type=roadmap&markers=color:blue|label:B|40,-73&sensor=false&size=500x400&zoom=5'
+
+Both Map and Marker can also use an address instead of coordinates in an array.  Example:
+
+	map = StaticGmaps::Map.new do |m|
+		m.center = "1234 Market St.; Phila, PA"
+		m.zoom	 = 13
+	end
+
+	map.markers << StaticGmaps::Marker.new do |m|
+		m.location = "412 W. Girard Ave; Phila, PA"
+		m.color    = "yellow"
+		m.label    = "F"
+	end
+
+	map.markers << StaticGmaps::Marker.new do |m|
+		m.location = "1356 N. Front St; Phila, PA"
+		m.color    = "orange"
+		m.label    = "E"
+	end
 
 == REQUIREMENTS:
 
