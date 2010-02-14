@@ -34,8 +34,6 @@ module StaticGmaps
   @@default_map_type = :roadmap
   @@default_key      = 'ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA'
   
-
-  
   #marker
   @@default_latitude        = nil
   @@default_longitude       = nil
@@ -56,17 +54,35 @@ module StaticGmaps
       end
     EOS
   end  
+  
+  def self.base_uri
+    'http://maps.google.com/maps/api/staticmap'
+  end
+  
+  class Location
+    attr_reader :value
+    def initialize(coordinates_array_or_address)
+      @value = if coordinates_array_or_address.is_a?(String)
+        URI.encode(coordinates_array_or_address)
+      else
+        coordinates_array_or_address
+      end
+    end
+    
+    def to_s
+      @value.is_a?(Array) ? @value.join(",") : @value
+    end
+    
+  end
       
   class Map
-
-
-    attr_accessor :center,
-                  :zoom,
+  
+    attr_accessor :zoom,
                   :size,
                   :map_type,
                   :key,
                   :markers
-
+    
     def initialize(options = {})
       self.center   = options[:center]
       self.zoom     = options[:zoom]     || StaticGmaps::default_zoom
@@ -75,13 +91,21 @@ module StaticGmaps
       self.key      = options[:key]      || StaticGmaps::default_key
       self.markers  = options[:markers]  || [ ]
     end
-
+    
     def width
       size[0]
     end
 
     def height
       size[1]
+    end
+    
+    def center=(array_or_string)
+      @center = Location.new(array_or_string)
+    end
+    
+    def center
+      @center ? @center.value : nil
     end
 
     # http://code.google.com/apis/maps/documentation/staticmaps/index.html#URL_Parameters
@@ -102,13 +126,13 @@ module StaticGmaps
       parameters[:size]     = "#{size[0]}x#{size[1]}"
       parameters[:key]      = "#{key}"
       parameters[:map_type] = "#{map_type}"               if map_type
-      parameters[:center]   = "#{center[0]},#{center[1]}" if center
+      parameters[:center]   = "#{@center.to_s}" if center
       parameters[:zoom]     = "#{zoom}"                   if zoom
       parameters[:markers]  = "#{markers_url_fragment}"   if markers_url_fragment
       parameters = parameters.to_a.sort { |a, b| a[0].to_s <=> b[0].to_s }
       parameters = parameters.collect { |parameter| "#{parameter[0]}=#{parameter[1]}" }
       parameters = parameters.join '&'
-      x = "http://maps.google.com/staticmap?#{parameters}"
+      x = "#{StaticGmaps.base_uri}?#{parameters}"
       raise "Google doesn't like the url to be longer than #{StaticGmaps::maximum_url_size} characters.  Try fewer or less precise markers." if x.size > StaticGmaps::maximum_url_size
       return x
     end  
