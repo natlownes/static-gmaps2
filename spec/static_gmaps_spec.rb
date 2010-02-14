@@ -23,8 +23,8 @@ describe StaticGmaps do
       it 'should set map_type to default' do
         @map.map_type.should == StaticGmaps::default_map_type
       end
-      it 'should set key to default' do
-        @map.key.should      == StaticGmaps::default_key
+      it 'should not set key if not provided' do
+        @map.key.should be_nil
       end
     end # initialize without attr
     
@@ -39,12 +39,24 @@ describe StaticGmaps do
                                     :markers  => [ @marker ]
       end
       
-      it 'should set center'   do @map.center.should   == [ 40.714728, -73.998672 ] end
-      it 'should set zoom'     do @map.zoom.should     == 12 end
-      it 'should set size'     do @map.size.should     == [ 500, 400 ] end
-      it 'should set map_type' do @map.map_type.should == :roadmap end
-      it 'should set key'      do @map.key.should      == 'ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA' end
-      it 'should set markers'  do @map.markers.should  == [ @marker ] end
+      it 'should set center' do 
+        @map.center.should   == [ 40.714728, -73.998672 ] 
+      end
+      it 'should set zoom' do 
+        @map.zoom.should     == 12 
+      end
+      it 'should set size' do 
+        @map.size.should     == [ 500, 400 ] 
+      end
+      it 'should set map_type' do 
+        @map.map_type.should == :roadmap 
+      end
+      it 'should set key if provided' do 
+        @map.key.should      == 'ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA' 
+      end
+      it 'should set markers'  do 
+        @map.markers.should  == [ @marker ] 
+      end
       
     end#initialize w/all attrs
     
@@ -54,7 +66,7 @@ describe StaticGmaps do
       end
 
       it 'should have a url' do
-        @map.url.should == "#{StaticGmaps.base_uri}?center=0,0&key=ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA&map_type=roadmap&size=500x400&zoom=1"
+        @map.url.should == "#{StaticGmaps.base_uri}?center=0,0&map_type=roadmap&sensor=false&size=500x400&zoom=1"
       end
       
       it 'should have a width' do
@@ -63,6 +75,10 @@ describe StaticGmaps do
       
       it 'should have a height' do
         @map.height.should   == 400
+      end
+      
+      it 'should set sensor attribute to false' do
+        @map.sensor.should be_false
       end
     end
     
@@ -73,11 +89,15 @@ describe StaticGmaps do
         @map = StaticGmaps::Map.new :markers  => [ @marker_1, @marker_2 ]
       end
       
-      it 'should have a markers_url_fragment'              do @map.markers_url_fragment.should == '10,20,greena|15,25,blueb' end
-      it 'should include the markers_url_fragment its url' do @map.url.should include(@map.markers_url_fragment) end
+      it 'should have a markers_url_fragment' do 
+        @map.markers_url_fragment.should == '10,20,greena|15,25,blueb' 
+      end
+      
+      it 'should include the markers_url_fragment its url' do 
+        @map.url.should include(@map.markers_url_fragment) 
+      end
     end
-    
-  end
+  end #describe Map
   
   describe Marker do 
     context 'initializing with no attributes' do
@@ -121,14 +141,35 @@ describe StaticGmaps do
       it 'should set alpha_character' do 
         @marker.alpha_character.should == :z 
       end
-      
     end
+    
+    context 'initialize with address as location' do
+      before :each do
+        @address = '1234 Market St. Philadelphia, PA'
+        @marker = Marker.new do |m|
+          m.location = @address
+        end
+      end
+      
+      it 'should return a uri encoded address for location' do
+        @marker.location.should == URI.encode(@address)
+      end
+      
+      it 'should return nil for latitude' do
+        @marker.latitude.should be_nil
+      end
+      
+      it 'should return nil for longitude' do
+        @marker.longitude.should be_nil
+      end
+    end
+    
   end #Marker
   
   describe Location do
     before(:each) do
       @coordinates = [39.967648,-75.156784]
-      @address = '1400 N. Front St. Philadelphia, PA'
+      @address = '1234 Market St. Philadelphia, PA'
     end
     
     it 'should initialize with either an array or a string' do
