@@ -26,7 +26,7 @@ module StaticGmaps
   @@version = '0.0.4' 
   
   #map  
-  @@maximum_url_size = 1978
+  @@maximum_url_size = 2048
   @@maximum_markers  = 50
   @@default_center   = [ 0, 0 ]
   @@default_zoom     = 1
@@ -40,8 +40,14 @@ module StaticGmaps
   @@default_longitude       = nil
   @@default_color           = nil
   @@default_alpha_character = nil
-  @@valid_colors            = [ :red, :green, :blue ]
-  @@valid_alpha_characters  = [ :a, :b, :c, :d, :e, :f, :g, :h, :i, :j, :k, :l, :m, :n, :o, :p, :q, :r, :s, :t, :u, :v, :w, :x, :y, :z ]    
+  @@valid_colors            = [ :black, :brown, :green, :purple, :yellow, :blue, :gray, :orange, :red, :white ]
+  @@valid_alpha_characters  = []    
+  ("A").upto("Z") do |letter|
+    @@valid_alpha_characters << letter
+  end
+  0.upto(9) do |n|
+    @@valid_alpha_characters << n.to_s
+  end
   
   [:version, :maximum_url_size, :maximum_markers, :default_center, :default_zoom, :default_size, :default_map_type, :default_key,
   :default_latitude, :default_longitude, :default_color, :default_alpha_character, :valid_colors, :valid_alpha_characters, :base_uri].each do |sym|
@@ -63,7 +69,8 @@ module StaticGmaps
                   :map_type,
                   :key,
                   :markers,
-                  :sensor
+                  :sensor,
+                  :format
     
     def initialize(options = {}, &block)
       self.center   = options[:center]
@@ -72,6 +79,7 @@ module StaticGmaps
       self.map_type = options[:map_type] || StaticGmaps::default_map_type
       self.sensor   = options[:sensor]   || false
       self.key      = options[:key]
+      self.format   = options[:format]
       self.markers  = options[:markers]  || [ ]
       yield self if block_given?
     end
@@ -113,6 +121,7 @@ module StaticGmaps
       parameters[:zoom]     = "#{zoom}"                   if zoom
       parameters[:markers]  = "#{markers_url_fragment}"   if markers_url_fragment
       parameters[:sensor]   = "#{sensor}"
+      parameters[:format]   = "#{format}"                 if format
       parameters = parameters.to_a.sort { |a, b| a[0].to_s <=> b[0].to_s }
       parameters = parameters.collect { |parameter| "#{parameter[0]}=#{parameter[1]}" }
       parameters = parameters.join '&'
@@ -123,7 +132,7 @@ module StaticGmaps
     
     def markers_url_fragment
       if markers && markers.any?
-        return markers.collect{|marker| marker.url_fragment }.join('|')
+        return markers.collect{|marker| marker.url_fragment }.join('&markers=')
       else
         return nil
       end
@@ -150,16 +159,32 @@ module StaticGmaps
   class Marker
     
     attr_reader :color,
-                :alpha_character
+                :label,
+                :size,
+                :icon,
+                :shadow
     
     def initialize(options = {}, &block)
       self.location        = options[:location]        || [StaticGmaps::default_latitude, StaticGmaps::default_longitude]
-      # accept original latitude/longitude args
-      self.latitude        = options[:latitude]
-      self.longitude       = options[:longitude]
+      self.label           = options[:label]           || StaticGmaps::default_alpha_character
+      # original api compatibility
+      self.label           = options[:alpha_character] if options[:alpha_character]
+      self.latitude        = options[:latitude]        if options[:latitude]
+      self.longitude       = options[:longitude]       if options[:longitude]
       self.color           = options[:color]           || StaticGmaps::default_color
-      self.alpha_character = options[:alpha_character] || StaticGmaps::default_alpha_character
       yield self if block_given?
+    end
+    
+    def available_parameters
+      [:location, :color, :label, :size, :icon, :shadow]
+    end
+    
+    def attributes
+      self.available_parameters.inject({}) do |store, parameter_name|
+        value = self.send(parameter_name)
+        store[parameter_name] = value if value
+        store
+      end
     end
     
     def color=(value)
@@ -170,6 +195,10 @@ module StaticGmaps
         end
       end
       @color = value
+    end
+    
+    def icon=(url)
+      @icon = URI.encode(url)
     end
     
     def location=(array_or_string)
@@ -196,22 +225,40 @@ module StaticGmaps
       @location.value[1] if @location.value.is_a?(Array)
     end
     
-    def alpha_character=(value)
+    def label=(value)
       if value
-        value = value.to_s.downcase.to_sym
+        value = value.to_s.upcase
         if !StaticGmaps::valid_alpha_characters.include?(value)
-          raise ArgumentError.new("#{value} is not a supported alpha_character.  Supported colors are #{StaticGmaps::valid_alpha_characters.join(', ')}.")
+          raise ArgumentError.new("#{value} is not a supported label.  Supported labels are #{StaticGmaps::valid_alpha_characters.join(', ')}.")
         end
       end
-      @alpha_character = value
+      @label = value
+    end
+    
+    # for compatibility with original ruby api
+    def alpha_character=(value)
+      self.label = value
+    end
+    
+    def alpha_character
+      self.label
     end
     
     def url_fragment
-      raise ArgumentError.new("Location must be set before a url_fragment can be generated for Marker.") if !@location
-      x  = "#{@location.to_s}"
-      x += ",#{color}" if color
-      x += "#{alpha_character}" if alpha_character
-      return x
+      # markers=color:blue|label:S|62.107733,-145.541936&markers=size:tiny|color:green|Delta+Junction,AK
+      raise ArgumentError.new("Location must be set before a url_fragment can be generated for Marker.") if !location
+      marker_parameter_separator = "|"
+      marker_value_separator = ":"
+      location = @location.to_s
+      str = ""
+      attrs = self.attributes
+      attrs.delete(:location)
+      if !attrs.empty?
+        str << attrs.map {|parameter, value| "#{parameter}#{marker_value_separator}#{value}"}.join(marker_parameter_separator)
+        str << marker_parameter_separator
+      end
+      str << location
+      str
     end
   end#Marker
   

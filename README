@@ -16,9 +16,6 @@ Original Version from John Wulff, modified by Daniel Mattes
   # In environment.rb or initializers you can set default values, for example
   StaticGmaps::default_size = [ 170, 200 ]
 
-	# Get from http://code.google.com/apis/maps/signup.html
-	GOOGLE_MAPS_API_KEY = ''
-
   map = StaticGmaps::Map.new :center   => [ 40.714728, -73.998672 ],
                              :zoom     => 5,
                              :size     => [ 500, 400 ],

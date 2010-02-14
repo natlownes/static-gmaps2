@@ -84,13 +84,14 @@ describe StaticGmaps do
     
     context 'with default attributes and markers' do
       before(:each) do
-        @marker_1 = StaticGmaps::Marker.new :latitude => 10, :longitude => 20, :color => 'green', :alpha_character => 'A'
-        @marker_2 = StaticGmaps::Marker.new :latitude => 15, :longitude => 25, :color => 'blue', :alpha_character => 'B'
+        @marker_1 = StaticGmaps::Marker.new :latitude => 10, :longitude => 20, :color => 'green', :label => 'A'
+        @marker_2 = StaticGmaps::Marker.new :latitude => 15, :longitude => 25, :color => 'blue', :label => 'B'
         @map = StaticGmaps::Map.new :markers  => [ @marker_1, @marker_2 ]
       end
       
       it 'should have a markers_url_fragment' do 
-        @map.markers_url_fragment.should == '10,20,greena|15,25,blueb' 
+        # the first "markers" parameter for multiple markers will be added on in Map#url
+        @map.markers_url_fragment.should == "color:green|label:A|10,20&markers=color:blue|label:B|15,25"
       end
       
       it 'should include the markers_url_fragment its url' do 
@@ -114,7 +115,7 @@ describe StaticGmaps do
         @marker.color.should           == StaticGmaps::default_color
       end
       it 'should set alpha_character to default' do 
-        @marker.alpha_character.should == StaticGmaps::default_alpha_character
+        @marker.label.should == StaticGmaps::default_alpha_character
       end
     end
     
@@ -139,7 +140,7 @@ describe StaticGmaps do
       end
       
       it 'should set alpha_character' do 
-        @marker.alpha_character.should == :z 
+        @marker.alpha_character.should == "Z"
       end
     end
     
@@ -161,6 +162,21 @@ describe StaticGmaps do
       
       it 'should return nil for longitude' do
         @marker.longitude.should be_nil
+      end
+    end
+    
+    context 'url_fragment ordering' do
+      before :each do
+        @address = '1234 Market St. Philadelphia, PA'
+        @marker = Marker.new do |m|
+          m.location = @address
+          m.color = "red"
+          m.label = 1
+        end
+      end
+      
+      it 'should end with the address/coordinates' do
+        @marker.url_fragment.should match /.PA$/
       end
     end
     
@@ -191,4 +207,4 @@ describe StaticGmaps do
     end
   
   end #describe Location
-end 
+end #describe StaticGmaps

@@ -3,18 +3,18 @@ Gem::Specification.new do |s|
   s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["John Wulff", "Daniel Mattes"]
+  s.authors = ["John Wulff", "Daniel Mattes", "Nat Lownes"]
   s.date = %q{2009-02-19}
   s.description = %q{== DESCRIPTION:  Provides an interface to the Google Static Maps API. Original Version from John Wulff, modified by Daniel Mattes
   == FEATURES/PROBLEMS:  * Provides an interface to the Google Static Maps API.}
-  s.email = %q{daniel.mattes@gmx.de}
+  s.email = %q{nat.lownes@gmail.com}
   s.extra_rdoc_files = ["History.txt", "LICENSE.txt", "Manifest.txt", "readme.txt"]
   s.files = ["History.txt", "LICENSE.txt", "Manifest.txt", "readme.txt", "Rakefile", "lib/static_gmaps.rb", "spec/static_gmaps_spec.rb"]
   s.has_rdoc = true
   s.rdoc_options = ["--main", "readme.txt"]
-  s.homepage = 'http://github.com/dmattes/static-gmaps/'
+  s.homepage = 'http://github.com/natlownes/static-gmaps/'
   s.require_paths = ["lib"]
-  s.rubyforge_project = %q{dmattes-static-gmaps}
+  s.rubyforge_project = %q{static-gmaps}
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{Provides an interface to the Google Static Maps API.}
 
