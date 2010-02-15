@@ -180,6 +180,21 @@ describe StaticGmaps do
       end
     end
     
+    context "using a custom icon" do
+      before :each do
+        @uri = 'http://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=home|FFFF00'
+        @marker = Marker.new do |m|
+          m.location = [40.000, -33.000]
+          m.icon = @uri
+        end
+      end
+      
+      it 'should also encode |, &, and ?' do
+        @marker.icon.should == 'http://chart.apis.google.com/chart%3Fchst=d_map_pin_icon%26chld=home%7CFFFF00'
+      end
+      
+    end
+    
   end #Marker
   
   describe Location do

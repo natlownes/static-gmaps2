@@ -198,7 +198,7 @@ module StaticGmaps
     end
     
     def icon=(url)
-      @icon = URI.encode(url)
+      @icon = (URI.encode(url, "?|&"))
     end
     
     def location=(array_or_string)
