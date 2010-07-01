@@ -91,7 +91,12 @@ describe StaticGmaps do
       
       it 'should have a markers_url_fragment' do 
         # the first "markers" parameter for multiple markers will be added on in Map#url
-        @map.markers_url_fragment.should == "color:green|label:A|10,20&markers=color:blue|label:B|15,25"
+        @map.markers_url_fragment.should match(/color:green/)
+        @map.markers_url_fragment.should match(/color:blue/)
+        @map.markers_url_fragment.should match(/label:A/)
+        @map.markers_url_fragment.should match(/label:B/)
+        @map.markers_url_fragment.should match(/10,20/)
+        @map.markers_url_fragment.should match(/15,25/)
       end
       
       it 'should include the markers_url_fragment its url' do 

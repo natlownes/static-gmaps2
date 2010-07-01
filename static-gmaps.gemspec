@@ -1,11 +1,11 @@
 Gem::Specification.new do |s|
-  s.name = %q{static-gmaps}
+  s.name = %q{static-gmaps2}
   s.version = "0.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["John Wulff", "Daniel Mattes", "Nat Lownes"]
-  s.date = %q{2009-02-19}
-  s.description = %q{== DESCRIPTION:  Provides an interface to the Google Static Maps API. Original Version from John Wulff, modified by Daniel Mattes
+  s.date = %q{2010-06-30}
+  s.description = %q{== DESCRIPTION:  Provides an interface to the Google Static Maps API V3. Based on static-gmaps
   == FEATURES/PROBLEMS:  * Provides an interface to the Google Static Maps API.}
   s.email = %q{nat.lownes@gmail.com}
   s.extra_rdoc_files = ["History.txt", "LICENSE.txt", "Manifest.txt", "readme.txt"]
