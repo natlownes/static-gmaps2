@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.description = %q{== DESCRIPTION:  Provides an interface to the Google Static Maps API V3. Based on static-gmaps
   == FEATURES/PROBLEMS:  * Provides an interface to the Google Static Maps API.}
   s.email = %q{nat.lownes@gmail.com}
-  s.extra_rdoc_files = ["History.txt", "LICENSE.txt", "Manifest.txt", "readme.txt"]
-  s.files = ["History.txt", "LICENSE.txt", "Manifest.txt", "readme.txt", "Rakefile", "lib/static_gmaps.rb", "spec/static_gmaps_spec.rb"]
+  s.extra_rdoc_files = ["History.txt", "LICENSE.txt", "Manifest.txt"]
+  s.files = ["History.txt", "LICENSE.txt", "Manifest.txt", "Rakefile", "lib/static_gmaps.rb", "spec/static_gmaps_spec.rb"]
   s.has_rdoc = true
   s.rdoc_options = ["--main", "readme.txt"]
   s.homepage = 'http://github.com/natlownes/static-gmaps/'

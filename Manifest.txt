@@ -1,7 +1,6 @@
 History.txt
 LICENSE.txt
 Manifest.txt
-README.txt
 Rakefile
 lib/static_gmaps.rb
 spec/static_gmaps_spec.rb
