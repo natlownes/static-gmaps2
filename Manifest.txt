@@ -1,6 +1,0 @@
-History.txt
-LICENSE.txt
-Manifest.txt
-Rakefile
-lib/static_gmaps.rb
-spec/static_gmaps_spec.rb

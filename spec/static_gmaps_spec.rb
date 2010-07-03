@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'spec'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'static_gmaps')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'static_gmaps2')
 include StaticGmaps
 
 STATIC_GOOGLE_MAP_DEFAULT_PARAMETERS_TEST_IMAGE_PATH = File.join File.dirname(__FILE__), 'test_image.gif'

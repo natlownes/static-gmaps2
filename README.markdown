@@ -3,7 +3,7 @@
 == DESCRIPTION:
 
 Provides an interface to the Google Static Maps API.
-Original Version from John Wulff.  Contributors include Daniel Mattes, Nat Lownes.
+Forked from static-gmaps.
 
 == FEATURES/PROBLEMS:
 
@@ -12,6 +12,8 @@ Original Version from John Wulff.  Contributors include Daniel Mattes, Nat Lowne
 == SYNOPSIS:
 
 In environment.rb or initializers you can set default values, for example:
+
+	require 'static_gmaps2'
 
 	StaticGmaps::default_size = [ 170, 200 ]
 
@@ -26,7 +28,7 @@ In environment.rb or initializers you can set default values, for example:
 	                                        :label => "B")
 map.url => 'http://maps.google.com/maps/api/staticmap?center=40.714728,-73.998672&map_type=roadmap&markers=color:blue|label:B|40,-73&sensor=false&size=500x400&zoom=5'
 
-Both Map and Marker can also use an address instead of coordinates in an array.  Example:
+The main feature that differentiates this project from static-gmaps is that both Map and Marker can also use an address or an array of coordinates (as seen above).  Example:
 
 	map = StaticGmaps::Map.new do |m|
 		m.center = "1234 Market St.; Phila, PA"
@@ -51,7 +53,11 @@ Both Map and Marker can also use an address instead of coordinates in an array. 
 
 == INSTALL:
 
-* sudo gem install static-gmaps
+* sudo gem install static-gmaps2
+
+== CONTACT:
+
+* nat.lownes@gmail.com
 
 == LICENSE:
 

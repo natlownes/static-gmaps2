@@ -1,3 +1,6 @@
+=== 0.0.6 / 2010-07-03 by nat.lownes@gmail.com
+  - Renamed some files to not conflict with the original static-gmaps.
+  - Cleanup.
 === 0.0.5 / 2010-02-14 by nat.lownes@gmail.com
 * Updated most all of the Ruby API to match the most recent Google Static Maps API.  This includes:
 	- Changed the maximum_url_size to 2048

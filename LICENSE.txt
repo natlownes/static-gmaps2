@@ -1,6 +1,6 @@
 The MIT License
 
-Copyright (c) 2008 John Wulff <johnwulff@gmail.com>
+Copyright (c) 2010 Nat Lownes <nat.lownes@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
